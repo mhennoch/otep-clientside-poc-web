@@ -5,14 +5,29 @@ import { UserInteractionInstrumentation } from "@opentelemetry/instrumentation-u
 import { ConsoleSpanExporter, SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 
+import LogRecord from "./logs/LogRecord";
+import LogEmitterProvider from "./logs/LogEmitterProvider";
+import SimpleLogProcessor from "./logs/SimpleLogProcessor";
+import ConsoleLogExporter from "./logs/ConsoleLogExporter";
+
 export default class ExampleOtelBundle {
   static init() {
     diag.setLogger(new DiagConsoleLogger());
 
-    const provider = new WebTracerProvider();
-    provider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+    const traceProvider = new WebTracerProvider();
+    traceProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+    traceProvider.register();
 
-    provider.register();
+    const resource = null;
+
+    const logProcessor = new SimpleLogProcessor(new ConsoleLogExporter());
+    const logProvider = new LogEmitterProvider(resource, logProcessor);
+    const logEmitter = logProvider.getLogEmitter();
+
+    // test log
+    const log = new LogRecord();
+    log.setAttribute('event.name', 'click');
+    logEmitter.emit(log);
 
     registerInstrumentations({
       instrumentations: [
