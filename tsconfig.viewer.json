@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"]
+  },
+  "include": ["viewer/**/*.ts", "viewer/**/*.ts", "viewer/**/*.d.ts", "viewer/**/*.tsx", "viewer/**/*.vue"],
+  "references": [
+    { "path": "./tsconfig.src.json" }
+  ]
+}
