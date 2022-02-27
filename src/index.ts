@@ -1,7 +1,5 @@
 import { diag, DiagConsoleLogger } from "@opentelemetry/api";
 import { registerInstrumentations } from "@opentelemetry/instrumentation";
-import { DocumentLoadInstrumentation } from "@opentelemetry/instrumentation-document-load";
-import { UserInteractionInstrumentation } from "@opentelemetry/instrumentation-user-interaction";
 import { BatchSpanProcessor, ConsoleSpanExporter, SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 
@@ -10,6 +8,9 @@ import LogEmitterProvider from "./logs-sdk/LogEmitterProvider";
 import SimpleLogProcessor from "./logs-sdk/SimpleLogProcessor";
 import ConsoleLogExporter from "./logs-sdk/export/ConsoleLogExporter";
 import OTLPLocalStorgeTraceExporter from "./local-storage-exporter/OTLPLocalStorgeTraceExporter";
+
+import { DocumentLoadInstrumentation } from "./instrumentations/document-load";
+import { UserInteractionInstrumentation } from "./instrumentations/user-interaction";
 
 export default class ExampleOtelBundle {
   static init() {
