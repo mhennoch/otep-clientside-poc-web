@@ -16,24 +16,15 @@ export default class ExampleOtelBundle {
   static init() {
     diag.setLogger(new DiagConsoleLogger());
 
-    const traceProvider = new WebTracerProvider();
-    traceProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
-    traceProvider.addSpanProcessor(new BatchSpanProcessor(new OTLPLocalStorgeTraceExporter()));
-    traceProvider.register();
-
-    const resource = null;
+    // const traceProvider = new WebTracerProvider();
+    // traceProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
+    // traceProvider.addSpanProcessor(new BatchSpanProcessor(new OTLPLocalStorgeTraceExporter()));
+    // traceProvider.register();
 
     const logProcessor = new SimpleLogProcessor(new ConsoleLogExporter());
     const logProvider = new LogEmitterProvider();
     logProvider.addLogProcessor(logProcessor);
     logProvider.register();
-
-    const logEmitter = logProvider.getLogEmitter();
-
-    // test log
-    const log = new LogRecord();
-    log.setAttribute('event.name', 'click');
-    logEmitter.emit(log);
 
     registerInstrumentations({
       instrumentations: [

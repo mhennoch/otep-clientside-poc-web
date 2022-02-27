@@ -40,6 +40,7 @@ import {
   addSpanPerformancePaintEvents,
   getPerformanceNavigationEntries,
 } from './utils';
+import { LogEmitter } from '../../logs-api';
 
 const VERSION = '0.0.0';
 
@@ -51,12 +52,16 @@ export class DocumentLoadInstrumentation extends InstrumentationBase<unknown> {
   readonly version: string = '1';
   moduleName = this.component;
 
+  private _logEmitter: LogEmitter;
+
   /**
    *
    * @param config
    */
   constructor(config: InstrumentationConfig = {}) {
-    super('@opentelemetry/instrumentation-document-load', VERSION, config);
+    const instrumentationName = '@opentelemetry/instrumentation-document-load';
+    super(instrumentationName, VERSION, config);
+    this._logEmitter = logs.getLogEmitter(instrumentationName, VERSION);
   }
 
   init() {}

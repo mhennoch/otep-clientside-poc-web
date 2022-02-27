@@ -34,7 +34,7 @@ export default class LogsAPI {
     );
   }
 
-  public getLogEmitter(): LogEmitter {
-
+  public getLogEmitter(name: string, version?: string): LogEmitter {
+    return this.getLogEmitterProvider().getLogEmitter(name, version);
   }
 }

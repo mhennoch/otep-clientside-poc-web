@@ -30,17 +30,17 @@ import {
   WindowWithZone,
   ZoneTypeWithPrototype,
 } from './types';
-// import { VERSION } from './version';
+import { LogEmitter, logs, Attributes } from '../../logs-api';
 
 const ZONE_CONTEXT_KEY = 'OT_ZONE_CONTEXT';
 const EVENT_NAVIGATION_NAME = 'Navigation:';
 const DEFAULT_EVENT_NAMES: EventName[] = ['click'];
+const VERSION = '0.0.0';
 
 function defaultShouldPreventSpanCreation() {
   return false;
 }
 
-const VERSION = '0.0.0';
 
 /**
  * This class represents a UserInteraction plugin for auto instrumentation.
@@ -65,14 +65,19 @@ export class UserInteractionInstrumentation extends InstrumentationBase<unknown>
   >();
   private _eventNames: Set<EventName>;
   private _shouldPreventSpanCreation: ShouldPreventSpanCreation;
+  private _logEmitter: LogEmitter;
 
   constructor(config?: UserInteractionInstrumentationConfig) {
-    super('@opentelemetry/instrumentation-user-interaction', VERSION, config);
+    const instrumentationName = '@opentelemetry/instrumentation-user-interaction';
+
+    super(instrumentationName, VERSION, config);
     this._eventNames = new Set(config?.eventNames ?? DEFAULT_EVENT_NAMES);
     this._shouldPreventSpanCreation =
       typeof config?.shouldPreventSpanCreation === 'function'
         ? config.shouldPreventSpanCreation
         : defaultShouldPreventSpanCreation;
+
+    this._logEmitter = logs.getLogEmitter(instrumentationName, VERSION);
   }
 
   init() {}
@@ -301,6 +306,11 @@ export class UserInteractionInstrumentation extends InstrumentationBase<unknown>
             plugin.removePatchedListener(this, type, listener);
           }
           const span = plugin._createSpan(target, type, parentSpan);
+
+          // create event for the interaction
+          const attributes: Attributes = { name: 'something' };
+          plugin._logEmitter.addEvent(type, attributes);
+
           if (span) {
             if (event) {
               plugin._eventsSpanMap.set(event, span);

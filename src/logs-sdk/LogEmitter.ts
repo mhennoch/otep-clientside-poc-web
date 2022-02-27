@@ -4,8 +4,9 @@ import LogRecord from './LogRecord';
 import LogData from './LogData';
 import { InstrumentationLibrary } from '@opentelemetry/core';
 import { LogEmitterProvider } from './LogEmitterProvider';
+import * as api from '../logs-api';
 
-export default class LogEmitter {
+export default class LogEmitter implements api.LogEmitter {
   readonly resource: Resource;
   readonly instrumentationLibrary: InstrumentationLibrary;
   readonly provider: LogEmitterProvider;
@@ -27,7 +28,21 @@ export default class LogEmitter {
     });
   }
 
+  addEvent(name: string, attributes: Attributes): void {
+    const log = new LogRecord();
+    log.setAttribute('event.name', name);
+
+    if (attributes) {
+      let key: string;
+      for (key in attributes) {
+        log.setAttribute(key, attributes[key]);
+      }
+    }
+    
+    this.emit(log);
+  }
+
   flush(): void {
-    throw new Error('not implemented')
+    // throw new Error('not implemented')
   }
 }

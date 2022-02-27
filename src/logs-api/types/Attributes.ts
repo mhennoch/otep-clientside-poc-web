@@ -1,4 +1,8 @@
 
+export interface Attributes {
+    [attributeKey: string]: AttributeValue | undefined;
+}
+
 export type AttributeValue =
     | string
     | number
