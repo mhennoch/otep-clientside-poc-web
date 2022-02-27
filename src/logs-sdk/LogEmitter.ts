@@ -3,25 +3,28 @@ import LogProcessor from './LogProcessor';
 import LogRecord from './LogRecord';
 import LogData from './LogData';
 import { InstrumentationLibrary } from '@opentelemetry/core';
+import { LogEmitterProvider } from './LogEmitterProvider';
 
 export default class LogEmitter {
   readonly resource: Resource;
   readonly instrumentationLibrary: InstrumentationLibrary;
-  readonly processor: LogProcessor;
+  readonly provider: LogEmitterProvider;
 
   constructor(
     resource: Resource,
-    processor: LogProcessor,
-    instrumentationLibrary: InstrumentationLibrary
+    instrumentationLibrary: InstrumentationLibrary,
+    provider: LogEmitterProvider
   ) {
     this.resource = resource;
-    this.processor = processor;
     this.instrumentationLibrary = instrumentationLibrary;
+    this.provider = provider;
   }
 
   emit(record: LogRecord): void {
     const data = new LogData(record, this.instrumentationLibrary);
-    this.processor.emit(data);
+    this.provider.processors.forEach(processor => {
+      processor.emit(data);
+    });
   }
 
   flush(): void {

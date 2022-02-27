@@ -5,10 +5,10 @@ import { UserInteractionInstrumentation } from "@opentelemetry/instrumentation-u
 import { BatchSpanProcessor, ConsoleSpanExporter, SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 
-import LogRecord from "./logs/LogRecord";
-import LogEmitterProvider from "./logs/LogEmitterProvider";
-import SimpleLogProcessor from "./logs/SimpleLogProcessor";
-import ConsoleLogExporter from "./logs/ConsoleLogExporter";
+import LogRecord from "./logs-sdk/LogRecord";
+import LogEmitterProvider from "./logs-sdk/LogEmitterProvider";
+import SimpleLogProcessor from "./logs-sdk/SimpleLogProcessor";
+import ConsoleLogExporter from "./logs-sdk/export/ConsoleLogExporter";
 import OTLPLocalStorgeTraceExporter from "./local-storage-exporter/OTLPLocalStorgeTraceExporter";
 
 export default class ExampleOtelBundle {
@@ -23,7 +23,10 @@ export default class ExampleOtelBundle {
     const resource = null;
 
     const logProcessor = new SimpleLogProcessor(new ConsoleLogExporter());
-    const logProvider = new LogEmitterProvider(resource, logProcessor);
+    const logProvider = new LogEmitterProvider();
+    logProvider.addLogProcessor(logProcessor);
+    logProvider.register();
+
     const logEmitter = logProvider.getLogEmitter();
 
     // test log
