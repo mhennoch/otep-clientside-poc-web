@@ -17,23 +17,40 @@ import OTLPLocalStorgeTraceExporter from "./local-storage-exporter/OTLPLocalStor
 import { DocumentLoadInstrumentation } from "./instrumentations/document-load";
 import { UserInteractionInstrumentation } from "./instrumentations/user-interaction";
 
-export default class ExampleOtelBundle {
-  static init() {
+function getResourceWithNewSession() {
+  const idGenerator : IdGenerator = new RandomIdGenerator();
+  let resourceAttributes : ResourceAttributes = {
+    sessionId: idGenerator.generateTraceId()
+  }
+  console.log('New sessionId: ', resourceAttributes.sessionId);
+  return new Resource(resourceAttributes)
+}
+export interface OtelWebType {
+  traceProvider?: WebTracerProvider;
+  refreshSession: () => void
+  init: () => void;
+}
+
+export const ExampleOtelBundle: OtelWebType = {
+  refreshSession: function() {
+    const newResource = this.traceProvider?.resource.merge( getResourceWithNewSession() );
+    // @ts-ignore
+    this.traceProvider.resource = newResource;
+    // @ts-ignore
+    this.traceProvider._config.resource = newResource;
+    // @ts-ignore
+    this.traceProvider._tracers.forEach( tracer => {
+      tracer.resource = newResource;
+    })
+  },
+  init: function() {
     diag.setLogger(new DiagConsoleLogger());
 
-    const idGenerator : IdGenerator = new RandomIdGenerator();
-
-    let resourceAttributes : ResourceAttributes = {
-      sessionId: idGenerator.generateTraceId()
-    }
-
-    const resource = new Resource(resourceAttributes)
-
+    const resource = getResourceWithNewSession();
     const traceProvider = new WebTracerProvider({resource});
     traceProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
     traceProvider.addSpanProcessor(new BatchSpanProcessor(new OTLPLocalStorgeTraceExporter()));
     traceProvider.register();
-
 
     const logProcessor = new SimpleLogProcessor(new ConsoleLogExporter());
     const logProvider = new LogEmitterProvider();
@@ -46,5 +63,10 @@ export default class ExampleOtelBundle {
         new UserInteractionInstrumentation(),
       ]
     });
+
+    this.traceProvider = traceProvider;
   }
+
 }
+
+export default ExampleOtelBundle;

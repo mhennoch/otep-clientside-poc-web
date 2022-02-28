@@ -19,6 +19,7 @@ export function storeRequest(request: RequestType) {
           sessionId = sessionIdAttr.value.stringValue;
         }
       }
+      console.log('Storing data: ', sessionId)
       storeData('spans', sessionId, resourceSpans)
     });
   }

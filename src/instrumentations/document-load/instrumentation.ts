@@ -40,7 +40,7 @@ import {
   addSpanPerformancePaintEvents,
   getPerformanceNavigationEntries,
 } from './utils';
-import { LogEmitter } from '../../logs-api';
+import { LogEmitter, logs } from '../../logs-api';
 
 const VERSION = '0.0.0';
 
