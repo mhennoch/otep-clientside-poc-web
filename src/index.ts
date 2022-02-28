@@ -4,6 +4,11 @@ import { DocumentLoadInstrumentation } from "@opentelemetry/instrumentation-docu
 import { UserInteractionInstrumentation } from "@opentelemetry/instrumentation-user-interaction";
 import { BatchSpanProcessor, ConsoleSpanExporter, SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
+import { Resource, ResourceAttributes } from '@opentelemetry/resources';
+import {
+  IdGenerator,
+  RandomIdGenerator,
+} from '@opentelemetry/core';
 
 import LogRecord from "./logs/LogRecord";
 import LogEmitterProvider from "./logs/LogEmitterProvider";
@@ -15,12 +20,20 @@ export default class ExampleOtelBundle {
   static init() {
     diag.setLogger(new DiagConsoleLogger());
 
-    const traceProvider = new WebTracerProvider();
+    const idGenerator : IdGenerator = new RandomIdGenerator();
+
+    let resourceAttributes : ResourceAttributes = {
+      sessionId: idGenerator.generateTraceId()
+    }
+
+    const resource = new Resource(resourceAttributes)
+
+    const traceProvider = new WebTracerProvider({resource});
+
     traceProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
     traceProvider.addSpanProcessor(new BatchSpanProcessor(new OTLPLocalStorgeTraceExporter()));
     traceProvider.register();
 
-    const resource = null;
 
     const logProcessor = new SimpleLogProcessor(new ConsoleLogExporter());
     const logProvider = new LogEmitterProvider(resource, logProcessor);

@@ -12,8 +12,13 @@ type RequestType = otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceSe
 export function storeRequest(request: RequestType) {
   if (request.resourceSpans) {
     request.resourceSpans.forEach(resourceSpans => {
-      // TODO: Determine session ID
-      const sessionId = '0';
+      let sessionId : any = '0'
+      if (resourceSpans.resource) {
+        const sessionIdAttr = resourceSpans.resource.attributes.find( attr => attr.key === 'sessionId')
+        if (sessionIdAttr) {
+          sessionId = sessionIdAttr.value.stringValue;
+        }
+      }
       storeData('spans', sessionId, resourceSpans)
     });
   }
