@@ -14,7 +14,7 @@ export function storeRequest(request: RequestType) {
     request.resourceSpans.forEach(resourceSpans => {
       let sessionId : any = '0'
       if (resourceSpans.resource) {
-        const sessionIdAttr = resourceSpans.resource.attributes.find( attr => attr.key === 'sessionId')
+        const sessionIdAttr = resourceSpans.resource.attributes.find( attr => attr.key === 'session.id')
         if (sessionIdAttr) {
           sessionId = sessionIdAttr.value.stringValue;
         }

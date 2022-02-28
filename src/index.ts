@@ -17,10 +17,13 @@ import OTLPLocalStorgeTraceExporter from "./local-storage-exporter/OTLPLocalStor
 import { DocumentLoadInstrumentation } from "./instrumentations/document-load";
 import { UserInteractionInstrumentation } from "./instrumentations/user-interaction";
 
+const idGenerator : IdGenerator = new RandomIdGenerator();
+const scriptInstaceId = idGenerator.generateSpanId();
+
 function getResourceWithNewSession() {
-  const idGenerator : IdGenerator = new RandomIdGenerator();
   let resourceAttributes : ResourceAttributes = {
-    sessionId: idGenerator.generateTraceId()
+    'session.id': idGenerator.generateTraceId(),
+    'session.scriptInstance': scriptInstaceId
   }
   console.log('New sessionId: ', resourceAttributes.sessionId);
   return new Resource(resourceAttributes)
