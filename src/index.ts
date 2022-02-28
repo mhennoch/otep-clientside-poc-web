@@ -1,7 +1,5 @@
 import { diag, DiagConsoleLogger } from "@opentelemetry/api";
 import { registerInstrumentations } from "@opentelemetry/instrumentation";
-import { DocumentLoadInstrumentation } from "@opentelemetry/instrumentation-document-load";
-import { UserInteractionInstrumentation } from "@opentelemetry/instrumentation-user-interaction";
 import { BatchSpanProcessor, ConsoleSpanExporter, SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 import { Resource, ResourceAttributes } from '@opentelemetry/resources';
@@ -10,11 +8,14 @@ import {
   RandomIdGenerator,
 } from '@opentelemetry/core';
 
-import LogRecord from "./logs/LogRecord";
-import LogEmitterProvider from "./logs/LogEmitterProvider";
-import SimpleLogProcessor from "./logs/SimpleLogProcessor";
-import ConsoleLogExporter from "./logs/ConsoleLogExporter";
+import LogRecord from "./logs-sdk/LogRecord";
+import LogEmitterProvider from "./logs-sdk/LogEmitterProvider";
+import SimpleLogProcessor from "./logs-sdk/SimpleLogProcessor";
+import ConsoleLogExporter from "./logs-sdk/export/ConsoleLogExporter";
 import OTLPLocalStorgeTraceExporter from "./local-storage-exporter/OTLPLocalStorgeTraceExporter";
+
+import { DocumentLoadInstrumentation } from "./instrumentations/document-load";
+import { UserInteractionInstrumentation } from "./instrumentations/user-interaction";
 
 export default class ExampleOtelBundle {
   static init() {
@@ -29,20 +30,15 @@ export default class ExampleOtelBundle {
     const resource = new Resource(resourceAttributes)
 
     const traceProvider = new WebTracerProvider({resource});
-
     traceProvider.addSpanProcessor(new SimpleSpanProcessor(new ConsoleSpanExporter()));
     traceProvider.addSpanProcessor(new BatchSpanProcessor(new OTLPLocalStorgeTraceExporter()));
     traceProvider.register();
 
 
     const logProcessor = new SimpleLogProcessor(new ConsoleLogExporter());
-    const logProvider = new LogEmitterProvider(resource, logProcessor);
-    const logEmitter = logProvider.getLogEmitter();
-
-    // test log
-    const log = new LogRecord();
-    log.setAttribute('event.name', 'click');
-    logEmitter.emit(log);
+    const logProvider = new LogEmitterProvider();
+    logProvider.addLogProcessor(logProcessor);
+    logProvider.register();
 
     registerInstrumentations({
       instrumentations: [
