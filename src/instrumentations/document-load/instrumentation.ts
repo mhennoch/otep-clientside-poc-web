@@ -101,6 +101,7 @@ export class DocumentLoadInstrumentation extends InstrumentationBase<unknown> {
     );
     const entries = getPerformanceNavigationEntries();
     const traceparent = (metaElement && metaElement.content) || '';
+
     context.with(propagation.extract(ROOT_CONTEXT, { traceparent }), () => {
       const rootSpan = this._startSpan(
         AttributeNames.DOCUMENT_LOAD,

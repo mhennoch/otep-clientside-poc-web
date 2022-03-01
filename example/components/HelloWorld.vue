@@ -4,12 +4,25 @@ import { ref } from 'vue'
 defineProps<{ msg: string }>()
 
 const count = ref(0)
+const items = ref([])
+
+function addItem(items) {
+  setTimeout(() => {
+    items.push('1234')
+  }, 510)
+}
+
 </script>
 
 <template>
   <h1>{{ msg }}</h1>
 
+  <li v-for="item in items">
+    {{ item }}
+  </li>
+
   <button type="button" @click="count++">count is: {{ count }}</button>
+  <button type="button" @click="addItem(items)">layout shift</button>
 </template>
 
 <style scoped>

@@ -16,6 +16,8 @@ import OTLPLocalStorgeTraceExporter from "./local-storage-exporter/OTLPLocalStor
 
 import { DocumentLoadInstrumentation } from "./instrumentations/document-load";
 import { UserInteractionInstrumentation } from "./instrumentations/user-interaction";
+import { PaintTimingInstrumentation } from "./instrumentations/paint-timing";
+import { WebVitalsInstrumentation } from "./instrumentations/web-vitals";
 
 const idGenerator : IdGenerator = new RandomIdGenerator();
 const scriptInstaceId = idGenerator.generateSpanId();
@@ -64,6 +66,8 @@ export const ExampleOtelBundle: OtelWebType = {
       instrumentations: [
         new DocumentLoadInstrumentation(),
         new UserInteractionInstrumentation(),
+        new PaintTimingInstrumentation(),
+        new WebVitalsInstrumentation()
       ]
     });
 

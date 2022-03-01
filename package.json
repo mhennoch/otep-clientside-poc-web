@@ -19,7 +19,8 @@
     "@vueuse/components": "^7.6.2",
     "@vueuse/core": "^7.6.2",
     "vue": "^3.2.25",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "web-vitals": "^2.1.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.2.0",

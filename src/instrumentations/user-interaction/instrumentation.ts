@@ -41,7 +41,6 @@ function defaultShouldPreventSpanCreation() {
   return false;
 }
 
-
 /**
  * This class represents a UserInteraction plugin for auto instrumentation.
  * If zone.js is available then it patches the zone otherwise it patches
@@ -308,8 +307,10 @@ export class UserInteractionInstrumentation extends InstrumentationBase<unknown>
           const span = plugin._createSpan(target, type, parentSpan);
 
           // create event for the interaction
-          const attributes: Attributes = { name: 'something' };
-          plugin._logEmitter.addEvent(type, attributes);
+          if (plugin._allowEventName(type)) {
+            const attributes: Attributes = {};
+            plugin._logEmitter.addEvent(type, attributes);
+          }
 
           if (span) {
             if (event) {
