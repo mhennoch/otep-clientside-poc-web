@@ -19,6 +19,8 @@ import { DocumentLoadInstrumentation } from "./instrumentations/document-load";
 import { UserInteractionInstrumentation } from "./instrumentations/user-interaction";
 import { PaintTimingInstrumentation } from "./instrumentations/paint-timing";
 import { WebVitalsInstrumentation } from "./instrumentations/web-vitals";
+import { ErrorInstrumentation } from "./instrumentations/errors";
+import { PageVisibilityInstrumentation } from "./instrumentations/page-visibility";
 
 const idGenerator : IdGenerator = new RandomIdGenerator();
 const scriptInstaceId = idGenerator.generateSpanId();
@@ -68,7 +70,9 @@ export const ExampleOtelBundle: OtelWebType = {
         new DocumentLoadInstrumentation(),
         new UserInteractionInstrumentation(),
         new PaintTimingInstrumentation(),
-        new WebVitalsInstrumentation()
+        new WebVitalsInstrumentation(),
+        new ErrorInstrumentation(),
+        new PageVisibilityInstrumentation()
       ]
     });
 

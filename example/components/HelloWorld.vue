@@ -12,6 +12,10 @@ function addItem(items) {
   }, 510)
 }
 
+function generateConsoleError() {
+  console.error('test error')
+}
+
 </script>
 
 <template>
@@ -23,6 +27,7 @@ function addItem(items) {
 
   <button type="button" @click="count++">count is: {{ count }}</button>
   <button type="button" @click="addItem(items)">layout shift</button>
+  <button type="button" @click="generateConsoleError">console error</button>
 </template>
 
 <style scoped>
