@@ -16,6 +16,12 @@ function generateConsoleError() {
   console.error('test error')
 }
 
+function makeXhrCall() {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://httpbin.org/get');
+  xhr.send();
+}
+
 </script>
 
 <template>
@@ -28,6 +34,7 @@ function generateConsoleError() {
   <button type="button" @click="count++">count is: {{ count }}</button>
   <button type="button" @click="addItem(items)">layout shift</button>
   <button type="button" @click="generateConsoleError">console error</button>
+  <button type="button" @click="makeXhrCall">XHR call</button>
 </template>
 
 <style scoped>
