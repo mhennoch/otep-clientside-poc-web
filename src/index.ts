@@ -3,6 +3,7 @@ import { registerInstrumentations } from "@opentelemetry/instrumentation";
 import { BatchSpanProcessor, ConsoleSpanExporter, SimpleSpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { WebTracerProvider } from "@opentelemetry/sdk-trace-web";
 import { Resource, ResourceAttributes } from '@opentelemetry/resources';
+import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch';
 import {
   IdGenerator,
   RandomIdGenerator,
@@ -72,7 +73,8 @@ export const ExampleOtelBundle: OtelWebType = {
         new PaintTimingInstrumentation(),
         new WebVitalsInstrumentation(),
         new ErrorInstrumentation(),
-        new PageVisibilityInstrumentation()
+        new PageVisibilityInstrumentation(),
+        new FetchInstrumentation(),
       ]
     });
 

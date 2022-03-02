@@ -16,6 +16,15 @@ function generateConsoleError() {
   console.error('test error')
 }
 
+function fetchSomething() {  
+  const url = 'https://www.random.org/integers/?num=10&min=1&max=6&col=1&base=10&format=plain&rnd=new'
+  fetch(url).then( res => {
+    res.json().then( json => {
+      console.log('RNG ', json);
+    })
+  })
+}
+
 </script>
 
 <template>
@@ -28,6 +37,7 @@ function generateConsoleError() {
   <button type="button" @click="count++">count is: {{ count }}</button>
   <button type="button" @click="addItem(items)">layout shift</button>
   <button type="button" @click="generateConsoleError">console error</button>
+  <button type="button" @click="fetchSomething">Fetch</button>
 </template>
 
 <style scoped>
