@@ -16,13 +16,21 @@ function generateConsoleError() {
   console.error('test error')
 }
 
-function fetchSomething() {  
+function fetchSomething() {
+  console.log('fetch');
+  
   const url = 'https://www.random.org/integers/?num=10&min=1&max=6&col=1&base=10&format=plain&rnd=new'
   fetch(url).then( res => {
     res.json().then( json => {
       console.log('RNG ', json);
     })
   })
+}
+
+function makeXhrCall() {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', 'https://httpbin.org/get');
+  xhr.send();
 }
 
 </script>
@@ -37,6 +45,7 @@ function fetchSomething() {
   <button type="button" @click="count++">count is: {{ count }}</button>
   <button type="button" @click="addItem(items)">layout shift</button>
   <button type="button" @click="generateConsoleError">console error</button>
+  <button type="button" @click="makeXhrCall">XHR call</button>
   <button type="button" @click="fetchSomething">Fetch</button>
 </template>
 

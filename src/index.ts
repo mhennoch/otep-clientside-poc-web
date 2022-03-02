@@ -22,6 +22,7 @@ import { PaintTimingInstrumentation } from "./instrumentations/paint-timing";
 import { WebVitalsInstrumentation } from "./instrumentations/web-vitals";
 import { ErrorInstrumentation } from "./instrumentations/errors";
 import { PageVisibilityInstrumentation } from "./instrumentations/page-visibility";
+import { XMLHttpRequestInstrumentation } from '@opentelemetry/instrumentation-xml-http-request';
 
 const idGenerator : IdGenerator = new RandomIdGenerator();
 const scriptInstaceId = idGenerator.generateSpanId();
@@ -75,6 +76,7 @@ export const ExampleOtelBundle: OtelWebType = {
         new ErrorInstrumentation(),
         new PageVisibilityInstrumentation(),
         new FetchInstrumentation(),
+        new XMLHttpRequestInstrumentation()
       ]
     });
 

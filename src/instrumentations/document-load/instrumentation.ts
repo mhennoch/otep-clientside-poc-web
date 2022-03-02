@@ -149,8 +149,22 @@ export class DocumentLoadInstrumentation extends InstrumentationBase<unknown> {
 
       addSpanPerformancePaintEvents(rootSpan);
 
+      this._addNavigationTimingEvents(entries);
+
       this._endSpan(rootSpan, PTN.LOAD_EVENT_END, entries);
     });
+  }
+
+  private _addNavigationTimingEvents(entries): void {
+    if (PTN.LOAD_EVENT_START in entries) {
+      this._logEmitter.addEvent('window load', entries[PTN.LOAD_EVENT_START]);
+    }
+    if (PTN.DOM_INTERACTIVE in entries) {
+      this._logEmitter.addEvent('dom interactive', entries[PTN.DOM_INTERACTIVE]);
+    }
+    if (PTN.DOM_CONTENT_LOADED_EVENT_END in entries) {
+      this._logEmitter.addEvent('dom content loaded', entries[PTN.DOM_CONTENT_LOADED_EVENT_END]);
+    }
   }
 
   /**
