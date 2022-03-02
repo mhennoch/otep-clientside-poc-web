@@ -26,12 +26,17 @@ const sessions = computed(() => {
   <div class="p-2">
     <ul class="list-disc ml-6">
       <li v-for="session in sessions">
-        <RouterLink :to="{name: 'session.view', params: {sessionId: session.sessionId}}">
-          {{ session.sessionId }}
-        </RouterLink>
+        {{ session.sessionId }}
         <span class="text-sm">
           (<UseTimeAgo v-slot="{ timeAgo }" :time="session.lastDataTime">{{ timeAgo }}</UseTimeAgo>)
         </span>
+        <RouterLink :to="{name: 'session.view', params: {sessionId: session.sessionId}}">
+          raw data
+        </RouterLink>
+        |
+        <RouterLink :to="{name: 'session.timeline', params: {sessionId: session.sessionId}}">
+          timeline 
+        </RouterLink>
       </li>
     </ul>
   </div>
