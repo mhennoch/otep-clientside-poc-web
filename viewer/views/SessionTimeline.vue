@@ -19,6 +19,16 @@ export default {
       }
     });
 
+    let logId = 0
+    data = data.concat(storedData.logs.map(log => {
+      return {
+        id: logId++,
+        content: log.attributes.find(a => a.key === 'event.name').value.stringValue,
+        start: log.timeUnixNano / 1e6,
+        group: 2
+      }
+    }))
+
     // Configuration for the Timeline
     var options = {
       verticalScroll: true,

@@ -13,6 +13,7 @@ import LogEmitterProvider from "./logs-sdk/LogEmitterProvider";
 import SimpleLogProcessor from "./logs-sdk/SimpleLogProcessor";
 import ConsoleLogExporter from "./logs-sdk/export/ConsoleLogExporter";
 import OTLPLocalStorgeTraceExporter from "./local-storage-exporter/OTLPLocalStorgeTraceExporter";
+import OTLPLocalStorgeLogExporter from "./local-storage-exporter/OTLPLocalStorageLogExporter";
 
 import { DocumentLoadInstrumentation } from "./instrumentations/document-load";
 import { UserInteractionInstrumentation } from "./instrumentations/user-interaction";
@@ -57,9 +58,9 @@ export const ExampleOtelBundle: OtelWebType = {
     traceProvider.addSpanProcessor(new BatchSpanProcessor(new OTLPLocalStorgeTraceExporter()));
     traceProvider.register();
 
-    const logProcessor = new SimpleLogProcessor(new ConsoleLogExporter());
-    const logProvider = new LogEmitterProvider();
-    logProvider.addLogProcessor(logProcessor);
+    const logProvider = new LogEmitterProvider({resource});
+    logProvider.addLogProcessor(new SimpleLogProcessor(new ConsoleLogExporter()));
+    logProvider.addLogProcessor(new SimpleLogProcessor(new OTLPLocalStorgeLogExporter()));
     logProvider.register();
 
     registerInstrumentations({

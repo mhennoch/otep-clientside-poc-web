@@ -3,6 +3,7 @@ import LogEmitter from "./LogEmitter";
 import LogProcessor from "./LogProcessor";
 import { LogEmitterConfig } from "./LogEmitterConfig";
 import { LogEmitterProvider, logs } from "../logs-api";
+import { InstrumentationLibrary } from '@opentelemetry/core';
 
 export default class LogEmitterProvider {
   readonly processors: LogProcessor[] = [];
@@ -14,7 +15,11 @@ export default class LogEmitterProvider {
   }
 
   getLogEmitter(name: string, version?: string): LogEmitter {
-    return new LogEmitter(this.resource, this.instrumentationLibrary, this);
+    const instrumentationLibrary = {
+      name: name,
+      version: version
+    }
+    return new LogEmitter(this.resource, instrumentationLibrary, this);
   } 
 
   addLogProcessor(logProcessor: LogProcessor): void {

@@ -19,9 +19,20 @@ export function storeRequest(request: RequestType) {
           sessionId = sessionIdAttr.value.stringValue;
         }
       }
-      console.log('Storing data: ', sessionId)
+      console.log('Storing data: ', sessionId, resourceSpans)
       storeData('spans', sessionId, resourceSpans)
     });
+  } else if (request.resourceLogs) {
+    request.resourceLogs.forEach(logs => {
+      let sessionId : any = '0'
+      if (logs.resource) {
+        const sessionIdAttr = logs.resource.attributes.find( attr => attr.key === 'session.id')
+        if (sessionIdAttr) {
+          sessionId = sessionIdAttr.value.stringValue;
+        }
+      }
+      storeData('logs', sessionId, logs);
+    })
   }
 }
 

@@ -24,6 +24,10 @@ export function useOTLPData(sessionId: Ref<string>): DeepReadonly<OTLPData> {
     spans: useLocalStorageData(
       computed(() => getStorageKey('spans', unref(sessionId))),
       processStoredSpans
+    ),
+    logs: useLocalStorageData(
+      computed(() => getStorageKey('logs', unref(sessionId))),
+      processStoredLogs 
     )
   });
 
@@ -76,3 +80,21 @@ function processStoredSpans(rawData: string): OTLPSpan[] {
   return collectedSpans;
 }
 
+function processStoredLogs(rawData: string): [] {
+  const resLogs: [] = JSON.parse(rawData);
+  const collectedLogs: [] = [];
+
+  resLogs.forEach(({resource, instrumentationLibraryLogs}) => {
+    instrumentationLibraryLogs.forEach(({instrumentationLibrary, logRecords}) => {
+      logRecords.forEach(logRecord => {
+        collectedLogs.push({
+          ...logRecord,
+          instrumentationLibrary,
+          resource
+        })
+      })
+    })
+  });
+
+  return collectedLogs;
+}

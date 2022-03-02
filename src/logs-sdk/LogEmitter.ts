@@ -4,6 +4,7 @@ import LogRecord from './LogRecord';
 import LogData from './LogData';
 import { InstrumentationLibrary } from '@opentelemetry/core';
 import { LogEmitterProvider } from './LogEmitterProvider';
+import { hrTime } from '@opentelemetry/core';
 import * as api from '../logs-api';
 
 export default class LogEmitter implements api.LogEmitter {
@@ -29,7 +30,7 @@ export default class LogEmitter implements api.LogEmitter {
   }
 
   addEvent(name: string, attributes: Attributes): void {
-    const log = new LogRecord();
+    const log = new LogRecord(hrTime(), null, null, this.resource);
     log.setAttribute('event.name', name);
 
     if (attributes) {

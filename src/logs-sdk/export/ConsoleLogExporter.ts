@@ -1,5 +1,5 @@
 import LogExporter from "./LogExporter";
-import LogData from "./LogData";
+import LogData from "../LogData";
 import {
   ExportResult,
   ExportResultCode,

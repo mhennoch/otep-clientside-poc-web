@@ -15,9 +15,11 @@ export default class LogRecord implements api.LogRecord {
   constructor(
     timestamp: api.TimeInput = hrTime(),
     traceId?: string,
-    spanId?: string
+    spanId?: string,
+    resource?: Resource
   ) {
     this.timestamp = timeInputToHrTime(timestamp);
+    this.resource = resource;
   }
 
   setAttribute(key: string, value?: api.AttributeValue): this {
