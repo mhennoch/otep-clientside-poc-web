@@ -41,16 +41,20 @@ export default {
     function findLastEvent() {
       const arr = JSON.parse(JSON.stringify(data));
       arr.sort( (a, b) => {
-        return b.end - a.end
+        return (b.end || b.start) - (a.end || a.start)
       })
       return arr[0];
     }
+
+    const lastEvent = findLastEvent()
+    const endOfSession = lastEvent.end || lastEvent.start
+    const sessionDuration = (lastEvent.end || lastEvent.start) - data[0].start;
 
     // Configuration for the Timeline
     var options = {
       verticalScroll: true,
       start: data[0].start,
-      end: findLastEvent().end,
+      end: endOfSession + sessionDuration * 0.1,
       zoomKey: 'shiftKey',
       groupOrder: function (a, b) {
         return a.id - b.id;

@@ -19,7 +19,7 @@ export function storeRequest(request: RequestType) {
           sessionId = sessionIdAttr.value.stringValue;
         }
       }
-      console.log('Storing data: ', sessionId, resourceSpans)
+      console.log('Storing spans: ', sessionId, resourceSpans)
       storeData('spans', sessionId, resourceSpans)
     });
   } else if (request.resourceLogs) {
@@ -31,6 +31,7 @@ export function storeRequest(request: RequestType) {
           sessionId = sessionIdAttr.value.stringValue;
         }
       }
+      console.log('Storing logs: ', sessionId, logs)
       storeData('logs', sessionId, logs);
     })
   }

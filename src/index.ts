@@ -28,13 +28,45 @@ const idGenerator : IdGenerator = new RandomIdGenerator();
 const scriptInstaceId = idGenerator.generateSpanId();
 
 function getResourceWithNewSession() {
+  let sessionId = getCookie('otel_sessionid');
+  // sessionId = null
+  if (!sessionId) {
+    sessionId = idGenerator.generateTraceId();
+    setCookie('otel_sessionid', sessionId, 5);
+  }
+
   let resourceAttributes : ResourceAttributes = {
-    'session.id': idGenerator.generateTraceId(),
+    'session.id': sessionId,
     'session.scriptInstance': scriptInstaceId
   }
-  console.log('New sessionId: ', resourceAttributes.sessionId);
+  console.log('Session Id: ', resourceAttributes['session.id']);
   return new Resource(resourceAttributes)
 }
+
+function setCookie(cname, cvalue, exminutes) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exminutes*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  console.log(expires)
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
 export interface OtelWebType {
   traceProvider?: WebTracerProvider;
   refreshSession: () => void
