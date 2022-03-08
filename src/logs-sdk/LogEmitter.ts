@@ -4,8 +4,9 @@ import LogRecord from './LogRecord';
 import LogData from './LogData';
 import { InstrumentationLibrary } from '@opentelemetry/core';
 import { LogEmitterProvider } from './LogEmitterProvider';
-import { hrTime } from '@opentelemetry/core';
+import { hrTime, isTimeInput } from '@opentelemetry/core';
 import * as api from '../logs-api';
+import { TimeInput } from '@opentelemetry/api';
 
 export default class LogEmitter implements api.LogEmitter {
   readonly resource: Resource;
@@ -29,14 +30,26 @@ export default class LogEmitter implements api.LogEmitter {
     });
   }
 
-  addEvent(name: string, attributes: Attributes): void {
-    const log = new LogRecord(hrTime(), null, null, this.resource);
+  addEvent(name: string,
+    attributesOrStartTime?: Attributes | TimeInput,
+    startTime?: TimeInput
+  ): void {
+    if (isTimeInput(attributesOrStartTime)) {
+      if (typeof startTime === 'undefined') {
+        startTime = attributesOrStartTime as TimeInput;
+      }
+      attributesOrStartTime = undefined;
+    }
+    if (typeof startTime === 'undefined') {
+      startTime = hrTime();
+    }
+    const log = new LogRecord(startTime, null, null, this.resource);
     log.setAttribute('event.name', name);
 
-    if (attributes) {
+    if (attributesOrStartTime) {
       let key: string;
-      for (key in attributes) {
-        log.setAttribute(key, attributes[key]);
+      for (key in attributesOrStartTime) {
+        log.setAttribute(key, attributesOrStartTime[key]);
       }
     }
     

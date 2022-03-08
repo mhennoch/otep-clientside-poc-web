@@ -55,7 +55,7 @@ export class WebVitalsInstrumentation extends InstrumentationBase<unknown> {
       const attributes: Attributes = {
         value: entry.value
       };
-      plugin._logEmitter.addEvent('largest-contentful-paint', attributes);
+      plugin._logEmitter.addEvent('largest-contentful-paint', attributes, entry.value);
     });
 
     // FID is not its own event, but a delay in processing of the first user input
@@ -66,7 +66,7 @@ export class WebVitalsInstrumentation extends InstrumentationBase<unknown> {
       const attributes: Attributes = {
         inputDelay: entry.value
       };
-      plugin._logEmitter.addEvent('first-input', attributes);
+      plugin._logEmitter.addEvent('first-input', attributes, entry.value);
     });
 
     // NOTE: CLS is a score, not an event, the timestamp of this event will be the collection

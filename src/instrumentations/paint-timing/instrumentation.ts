@@ -62,7 +62,7 @@ export class PaintTimingInstrumentation extends InstrumentationBase<unknown> {
           const attributes: Attributes = {
             startTime: entry.startTime
           };
-          plugin._logEmitter.addEvent(entry.name, attributes);
+          plugin._logEmitter.addEvent(entry.name, attributes, entry.startTime);
         }
       });
     });
