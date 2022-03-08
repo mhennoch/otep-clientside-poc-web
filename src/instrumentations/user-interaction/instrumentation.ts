@@ -407,6 +407,12 @@ export class UserInteractionInstrumentation extends InstrumentationBase<unknown>
         const urlAfter = `${location.pathname}${location.hash}${location.search}`;
         if (url !== urlAfter) {
           plugin._updateInteractionName(urlAfter);
+
+          const attributes: Attributes = {
+            oldUrl: url,
+            newUrl: urlAfter
+          };
+          plugin._logEmitter.addEvent('route change', attributes);
         }
         return result;
       };

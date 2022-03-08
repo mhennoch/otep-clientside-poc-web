@@ -19,7 +19,20 @@ function refreshSession() {
     <button @click="openViewer">Open Viewer</button>
     <button @click="refreshSession">Refresh session</button>
   </div>
-  <HelloWorld msg="Hello World" />
+  <div>
+    Hard navigations:
+    <router-link to="/">home</router-link> | 
+    <router-link to="/page2">page 2</router-link>
+  </div>
+  <div>
+    Route changes:
+    <a href="/">home</a> | 
+    <a href="/page2">page 2</a>
+  </div>
+
+  <HelloWorld msg="" />
+  <br>
+  <router-view></router-view>
 </template>
 
 <style>

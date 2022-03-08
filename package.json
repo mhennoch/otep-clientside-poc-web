@@ -23,7 +23,7 @@
     "shimmer": "^1.2.1",
     "vis-timeline": "^7.5.1",
     "vue": "^3.2.25",
-    "vue-router": "^4.0.12",
+    "vue-router": "^4.0.13",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
