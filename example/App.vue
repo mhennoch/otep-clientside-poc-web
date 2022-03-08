@@ -20,12 +20,12 @@ function refreshSession() {
     <button @click="refreshSession">Refresh session</button>
   </div>
   <div>
-    Hard navigations:
+    Route changes:
     <router-link to="/">home</router-link> | 
     <router-link to="/page2">page 2</router-link>
   </div>
   <div>
-    Route changes:
+    Hard navigations:
     <a href="/">home</a> | 
     <a href="/page2">page 2</a>
   </div>
