@@ -27,10 +27,9 @@ import { XMLHttpRequestInstrumentation } from '@opentelemetry/instrumentation-xm
 const idGenerator : IdGenerator = new RandomIdGenerator();
 const scriptInstaceId = idGenerator.generateSpanId();
 
-function getResourceWithNewSession() {
+function getResourceWithNewSession(forceRefresh) {
   let sessionId = getCookie('otel_sessionid');
-  // sessionId = null
-  if (!sessionId) {
+  if (!sessionId || forceRefresh) {
     sessionId = idGenerator.generateTraceId();
     setCookie('otel_sessionid', sessionId, 5);
   }
@@ -75,7 +74,7 @@ export interface OtelWebType {
 
 export const ExampleOtelBundle: OtelWebType = {
   refreshSession: function() {
-    const newResource = this.traceProvider?.resource.merge( getResourceWithNewSession() );
+    const newResource = this.traceProvider?.resource.merge( getResourceWithNewSession(true) );
     // @ts-ignore
     this.traceProvider.resource = newResource;
     // @ts-ignore
