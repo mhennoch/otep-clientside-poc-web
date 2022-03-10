@@ -156,6 +156,8 @@ export class DocumentLoadInstrumentation extends InstrumentationBase<unknown> {
   }
 
   private _addNavigationTimingEvents(entries): void {
+    this._logEmitter.addEvent('navigation start', performance.timeOrigin);
+
     if (PTN.LOAD_EVENT_START in entries) {
       this._logEmitter.addEvent('window load', entries[PTN.LOAD_EVENT_START]);
     }
