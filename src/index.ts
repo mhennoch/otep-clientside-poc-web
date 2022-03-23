@@ -38,6 +38,15 @@ function getResourceWithNewSession(forceRefresh) {
     'session.id': sessionId,
     'session.scriptInstance': scriptInstaceId
   }
+
+  if (navigator.userAgentData) {
+    const brands = navigator.userAgentData.brands.map(b => `${b.brand} ${b.version}`)
+    resourceAttributes['browser.brands'] = brands;
+    resourceAttributes['browser.platform'] = navigator.userAgentData.platform;
+  } else {
+    resourceAttributes['browser.user_agent'] = navigator.userAgent;
+  }
+
   console.log('Session Id: ', resourceAttributes['session.id']);
   return new Resource(resourceAttributes)
 }
