@@ -36,7 +36,10 @@ export class PageVisibilityInstrumentation extends InstrumentationBase {
 
   enable(): void {
     if (document.hidden) {
-      this._createSpan(document.hidden);
+      // enable is called from constructor before logEmitter is created
+      setTimeout(() => {
+        this._createEvent(document.hidden);
+      }, 0)
     }
 
     this.unloadListener = () => {
@@ -46,7 +49,7 @@ export class PageVisibilityInstrumentation extends InstrumentationBase {
     this.visibilityListener = () => {
       //ignore when page is unloading as it is expected then
       if (!this.unloading) {
-        this._createSpan(document.hidden);
+        this._createEvent(document.hidden);
       }
     };
     
@@ -59,7 +62,7 @@ export class PageVisibilityInstrumentation extends InstrumentationBase {
     window.removeEventListener('visibilitychange', this.visibilityListener);
   }
 
-  private _createSpan(hidden: boolean) {
+  private _createEvent(hidden: boolean) {
     const now = hrTime();
     this._logEmitter.addEvent('visibility', {
       hidden: hidden
